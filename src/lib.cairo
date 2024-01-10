@@ -1,27 +1,28 @@
-fn main() -> felt252 {
-    fib(16)
+use core::debug::PrintTrait;
+
+#[derive(Drop)]
+enum Message {
+    Quit,
+    Echo: felt252,
+    Move: (u128, u128),
 }
 
-fn fib(mut n: felt252) -> felt252 {
-    let mut a: felt252 = 0;
-    let mut b: felt252 = 1;
-    loop {
-        if n == 0 {
-            break a;
+trait Processing {
+    fn process(self: Message);
+}
+
+impl ProcessingImpl of Processing {
+    fn process(self: Message) {
+        match self {
+            Message::Quit => { println!("quitting") },
+            Message::Echo(value) => { println!("echoing {}", value) },
+            Message::Move((x, y)) => { println!("moving") },
         }
-        n = n - 1;
-        let temp = b;
-        b = a + b;
-        a = temp;
+        
     }
+    
 }
-
-#[cfg(test)]
-mod tests {
-    use super::fib;
-
-    #[test]
-    fn it_works() {
-        assert(fib(16) == 987, 'it works!');
-    }
+fn main(){
+let msg: Message = Message::Quit;
+msg.process();
 }
